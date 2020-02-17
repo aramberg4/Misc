@@ -125,14 +125,20 @@ def display_devices(devices):
 
 def move_in(user_data, data_source):
 	data_source['people'].append(user_data)
+	print('Successfully moved-in resident!')
 	return data_source
 
 # Move-out old resident and return new dictionary
 
 def move_out(first_name, last_name, data_source):
+	found = False
 	for person in data_source['people']:
 		if person['first_name'] == first_name and person['last_name'] == last_name:
 			data_source['people'].remove(person)
+			print('Successfully moved-out resident!')
+			found = True
+	if not found:
+		print('Resident not found at property...')
 
 	return data_source
 
@@ -192,31 +198,43 @@ def main():
 				last_name = input('Please enter resident last name: ')
 				print()
 				user_data = get_user_data(first_name, last_name, people_list)
-				user_devices = get_devices(data_source, user_data)
-				display_user_data(user_data)
-				display_devices(user_devices)
+				if user_data is not None:
+					user_devices = get_devices(data_source, user_data)
+					display_user_data(user_data)
+					display_devices(user_devices)
 
 			elif(user_input == 3): # Move in resident
 				user_data = { 'first_name': None,
 							  'last_name': None,
 							  'unit': None,
 							  'roles': [] }
-				first_name = input('Please enter resident first name: ')
+				while True:
+					first_name = input('Please enter resident first name: ')
+					if first_name is not "": # ensure user inputs something
+						break
 				user_data['first_name'] = first_name
-				last_name = input('Please enter resident last name: ')
+				while True:
+					last_name = input('Please enter resident last name: ')
+					if last_name is not "": # ensure user inputs something
+						break
 				user_data['last_name'] = last_name
-				unit = input('Please enter resident unit number: ')
+				while True:
+					unit = input('Please enter resident unit number: ')
+					if unit is not "": # ensure user inputs something
+						break
 				user_data['unit'] = unit
 				while True:
 					role = input("Please enter all resident roles one at a time. Type 'stop' and hit enter to end: ")
 					if role == 'stop':
 						break
+					elif role == "":
+						# ignore null input
+						continue
 					else:
 						user_data['roles'].append(role)
 				data_source = move_in(user_data, data_source)
 				try:
 					write_data(data_source, 'property_data_changes.json')
-					print('Successfully moved-in resident!')
 				except:
 					print('Error writing to file please check permissions and make sure it is not in use.')
 
@@ -226,7 +244,6 @@ def main():
 				data_source = move_out(first_name, last_name, data_source)
 				try:
 					write_data(data_source, 'property_data_changes.json')
-					print('Successfully moved-out resident!')
 				except:
 					print('Error writing to file please check permissions and make sure it is not in use.')
 
