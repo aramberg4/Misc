@@ -1,5 +1,5 @@
 #File Name:   stratis_interface.py
-#Purpose:     Command line tool to allow a user to interact with the provided data
+#Purpose:     Command line tool to allow a user to interact with the property data
 #Author:      Austin Ramberg
 #Date:        February 15, 2020
 
@@ -143,6 +143,7 @@ def move_out(first_name, last_name, data_source):
 	return data_source
 
 # Function to disply the main menu in the loop
+
 def display_menu():
 	print('\n')
 	print('Menu:')
